@@ -1,0 +1,24 @@
+{
+  "name": "@stageus/express-validator",
+  "version": "0.0.0",
+  "description": "validator for express",
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "npx tsc",
+    "dev": "tsc-watch --onSuccess \"node ./dist/index.js\"",
+    "release": "release-it"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Stageus-Corp/express-validator.git"
+  },
+  "keywords": [
+    "validator"
+  ],
+  "author": "jochong",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Stageus-Corp/express-validator/issues"
+  },
+  "homepage": "https://github.com/Stageus-Corp/express-validator#readme"
+}
