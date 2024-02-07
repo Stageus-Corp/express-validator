@@ -11,7 +11,7 @@ export class RequestKey {
      *
      * @example body params query
      */
-    public readonly key: 'body' | 'params' | 'query',
+    public readonly name: 'body' | 'params' | 'query',
     public readonly schema: Validator | ArraySchema | ValidateSchema
   ) {}
 }
