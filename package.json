@@ -13,7 +13,10 @@
     "url": "git+https://github.com/Stageus-Corp/express-validator.git"
   },
   "keywords": [
-    "validator"
+    "validator",
+    "validation",
+    "validate",
+    "express"
   ],
   "author": "jochong",
   "license": "MIT",
