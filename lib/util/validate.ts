@@ -18,6 +18,7 @@ export const validate = (validationList: Validation[]): RequestHandler => {
         const result = validation.run(value);
 
         if (!result.valid) {
+          valid = false;
           messages.push(...result.messages);
           continue;
         }
@@ -29,9 +30,6 @@ export const validate = (validationList: Validation[]): RequestHandler => {
         }
       }
     }
-
-    console.log(valid, messages);
-    console.log(req.body);
 
     if (!valid) {
       return next({
