@@ -267,6 +267,6 @@ describe('body message test', () => {
     const errorArg: any = next.mock.calls[0][0];
 
     console.log(errorArg);
-    expect(errorArg.messages[0].field).toBe('body.depth1.numberList');
+    expect(errorArg.messages[0].field).toBe('body.depth1.numberList[0]');
   });
 });
