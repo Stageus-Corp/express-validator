@@ -32,6 +32,6 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
-    "@stageus/validator": "^0.0.3"
+    "@stageus/validator": "^0.1.0"
   }
 }
