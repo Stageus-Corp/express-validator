@@ -9,6 +9,8 @@
       "strict": true,
       "noUnusedParameters": false,
       "skipLibCheck": true
-    }
+    },
+    "include": ["lib"],
+    "exclude": ["test"] 
   }
   
