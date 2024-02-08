@@ -1,7 +1,8 @@
 import { message, object } from '@stageus/validator';
 import { ArraySchema } from '@stageus/validator/dist/class/schema/ArraySchema';
-import { ValidateSchema } from '@stageus/validator/dist/class/schema/ValidateSchema';
+import { ObjectSchema } from '@stageus/validator/dist/class/schema/ObjectSchema';
 import { Validator } from '@stageus/validator/dist/class/validate/Validator';
+import { ExpressValidation } from '../../types/Validation';
 
 export class Validation {
   constructor(
@@ -17,48 +18,68 @@ export class Validation {
     /**
      * validate schema or Validator
      */
-    public readonly schema: Validator | ArraySchema | ValidateSchema
+    public readonly schema: Validator | ArraySchema | ObjectSchema
   ) {}
 
-  public run(value: any): {
-    valid: boolean;
-    messages: {
-      field: null | string;
-      message: null | string;
-    }[];
-  } {
-    const messages: { field: null | string; message: null | string }[] = [];
+  private getFieldName() {
+    if (this.fieldName) {
+      return this.name + '.' + this.fieldName;
+    }
+
+    return this.name;
+  }
+
+  public run(value: any): ExpressValidation.RunResult {
+    const messages: { field: string; message: string }[] = [];
     let valid = true;
-    if (this.schema instanceof Validator) {
-      const result = this.schema.run(value);
 
-      if (!result.valid) {
-        valid = false;
-        messages.push({
-          field: null,
-          message: result.message,
-        });
-      }
-    }
+    const bodyObjectSchema = object(this.schema);
 
-    if (this.schema instanceof ArraySchema) {
-      const result = object(this.schema).run(value);
+    const result = bodyObjectSchema.run(value, this.getFieldName());
 
-      if (!result.valid) {
-        valid = false;
-        messages.push(...result.reason);
-      }
-    }
+    return {
+      valid: result.valid,
+      messages: result.reason || [],
+      value: result.value,
+    };
 
-    if (this.schema instanceof ValidateSchema) {
-      const result = this.schema.run(value);
+    // Valdiator
+    // if (this.schema instanceof Validator) {
+    //   const result = this.schema.run(value);
 
-      if (!result.valid) {
-        valid = false;
-        messages.push(...result.reason);
-      }
-    }
+    //   if (!result.valid) {
+    //     valid = false;
+    //     messages.push({
+    //       field: null,
+    //       message: result.message,
+    //     });
+    //   } else {
+    //     value = result.value;
+    //   }
+    // }
 
-    return { messages, valid };
+    // // ArraySchema
+    // if (this.schema instanceof ArraySchema) {
+    //   const result = object(this.schema).run(value);
+
+    //   if (!result.valid) {
+    //     valid = false;
+    //     messages.push(...(result.reason || []));
+    //   } else {
+    //     value = result.value;
+    //   }
+    // }
+
+    // // ObjectSchema
+    // if (this.schema instanceof ObjectSchema) {
+    //   const result = this.schema.run(value);
+
+    //   if (!result.valid) {
+    //     valid = false;
+    //     messages.push(...(result.reason || []));
+    //   } else {
+    //     value = result.value;
+    //   }
+    // }
   }
 }
