@@ -9,3 +9,5 @@ tsconfig.json
 .prettierignore
 
 test/
+
+babel.config.js
