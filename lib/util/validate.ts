@@ -3,11 +3,13 @@ import { Body } from '../class/Body';
 import { Validation } from '../class/Validation';
 import { Query } from '../class/Query';
 import { Params } from '../class/Params';
+import { ValidationError } from '../class/ValidationError';
+import { ValidateSchema } from '@stageus/validator/types/ValidateShema';
 
 export const validate = (validationList: Validation[]): RequestHandler => {
   return (req, res, next) => {
     let valid = true;
-    const messages = [];
+    const messages: { message: string; field: string }[] = [];
 
     for (const validation of validationList) {
       let value: any = null;
@@ -43,10 +45,7 @@ export const validate = (validationList: Validation[]): RequestHandler => {
     }
 
     if (!valid) {
-      return next({
-        status: 400,
-        messages,
-      });
+      return new ValidationError(400, messages);
     }
 
     next();
