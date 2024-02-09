@@ -208,6 +208,28 @@ describe('body test ( Fail )', () => {
       })
     );
   });
+
+  test('5 - body test ( Fail )', () => {
+    const req: any = {
+      body: {
+        email: 'abc123',
+      },
+    };
+    const res: any = {};
+    const next = jest.fn();
+
+    validate([
+      body({
+        email: message('invalid email').isString().isEmail(),
+      }),
+    ])(req, res, next);
+
+    expect(next).toHaveBeenCalledWith(
+      expect.objectContaining({
+        status: 400,
+      })
+    );
+  });
 });
 
 describe('body message test', () => {
