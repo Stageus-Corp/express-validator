@@ -45,7 +45,7 @@ export const validate = (validationList: Validation[]): RequestHandler => {
     }
 
     if (!valid) {
-      return new ValidationError(400, messages);
+      return next(new ValidationError(400, messages));
     }
 
     next();
