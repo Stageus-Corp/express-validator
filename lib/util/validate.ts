@@ -1,6 +1,7 @@
 import { RequestHandler } from 'express';
 import { Body } from '../class/Body';
 import { Validation } from '../class/Validation';
+import { Query } from '../class/Query';
 
 export const validate = (validationList: Validation[]): RequestHandler => {
   return (req, res, next) => {
@@ -8,26 +9,31 @@ export const validate = (validationList: Validation[]): RequestHandler => {
     const messages = [];
 
     for (const validation of validationList) {
+      let value: any = null;
       if (validation instanceof Body) {
-        let value = req.body;
+        value = req.body;
+      }
 
-        if (validation.fieldName) {
-          value = value[validation.fieldName];
-        }
+      if (validation instanceof Query) {
+        value = req.query;
+      }
 
-        const result = validation.run(value);
+      if (validation.fieldName) {
+        value = value[validation.fieldName];
+      }
 
-        if (!result.valid) {
-          valid = false;
-          messages.push(...result.messages);
-          continue;
-        }
+      const result = validation.run(value);
 
-        if (validation.fieldName) {
-          req.body[validation.fieldName] = result.value;
-        } else {
-          req.body = result.value;
-        }
+      if (!result.valid) {
+        valid = false;
+        messages.push(...result.messages);
+        continue;
+      }
+
+      if (validation.fieldName) {
+        req[validation.name][validation.fieldName] = result.value;
+      } else {
+        req[validation.name] = result.value;
       }
     }
 
