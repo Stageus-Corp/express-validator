@@ -2,7 +2,6 @@ import { describe, expect, jest, test } from '@jest/globals';
 import { validate } from '../../lib/util/validate';
 import { array, message, object } from '@stageus/validator';
 import { body } from '../../lib/util/body';
-import { ValidateSchema } from '@stageus/validator/types/ValidateShema';
 
 describe('body test ( Success )', () => {
   test('1 - body test', () => {
@@ -248,11 +247,9 @@ describe('body message test', () => {
     validate([
       body({
         depth1: {
-          numberList: array(
-            object({
-              numberList: message().isNumber(),
-            })
-          ),
+          numberList: array({
+            numberList: message().isNumber(),
+          }),
         },
       }),
     ])(req, res, next);
@@ -266,7 +263,45 @@ describe('body message test', () => {
 
     const errorArg: any = next.mock.calls[0][0];
 
-    console.log(errorArg);
-    expect(errorArg.messages[0].field).toBe('body.depth1.numberList[0]');
+    expect(errorArg.messages[0].field).toBe(
+      'body.depth1.numberList[0].numberList'
+    );
+  });
+
+  test('6 - body message test', () => {
+    const req: any = {
+      body: {
+        email: {
+          depth1: {
+            numberList: [null],
+          },
+        },
+      },
+    };
+    const res: any = {};
+    const next = jest.fn();
+
+    validate([
+      body('email', {
+        depth1: {
+          numberList: array({
+            numberList: message().isNumber(),
+          }),
+        },
+      }),
+    ])(req, res, next);
+
+    expect(next).toHaveBeenCalledWith(
+      expect.objectContaining({
+        status: 400,
+        messages: expect.any(Array),
+      })
+    );
+
+    const errorArg: any = next.mock.calls[0][0];
+
+    expect(errorArg.messages[0].field).toBe(
+      'body.email.depth1.numberList[0].numberList'
+    );
   });
 });
