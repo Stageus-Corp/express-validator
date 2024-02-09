@@ -2,6 +2,7 @@ import { RequestHandler } from 'express';
 import { Body } from '../class/Body';
 import { Validation } from '../class/Validation';
 import { Query } from '../class/Query';
+import { Params } from '../class/Params';
 
 export const validate = (validationList: Validation[]): RequestHandler => {
   return (req, res, next) => {
@@ -16,6 +17,10 @@ export const validate = (validationList: Validation[]): RequestHandler => {
 
       if (validation instanceof Query) {
         value = req.query;
+      }
+
+      if (validation instanceof Params) {
+        value = req.params;
       }
 
       if (validation.fieldName) {
