@@ -450,4 +450,27 @@ describe('body trasnform test', () => {
       number: expect.any(Array),
     });
   });
+
+  test('3 - body default trasnform test', () => {
+    const req: any = {
+      body: {
+        number: '123',
+      },
+    };
+    const res: any = {};
+    const next = jest.fn();
+
+    validate([
+      body({
+        number: message().isString().split(''),
+        page: message().default(1).isNumber(),
+      }),
+    ])(req, res, next);
+
+    expect(next).toHaveBeenCalledWith();
+    expect(req.body).toStrictEqual({
+      number: ['1', '2', '3'],
+      page: 1,
+    });
+  });
 });
