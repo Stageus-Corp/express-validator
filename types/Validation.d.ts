@@ -1,10 +1,9 @@
+import { ValidateSchema } from '@stageus/validator/types/ValidateShema';
+
 export namespace ExpressValidation {
   export interface RunResult<T = any> {
     valid: boolean;
-    messages: {
-      field: null | string;
-      message: null | string;
-    }[];
+    messages: ValidateSchema.Reason[];
     value: T;
   }
 }
