@@ -55,6 +55,44 @@ describe('body test ( Success )', () => {
 
     expect(next).toHaveBeenCalledWith();
   });
+
+  test('4 - body test', () => {
+    const req: any = {
+      body: {
+        email: 'abc123@xx.xx',
+        fileList: [
+          {
+            name: '123.png',
+            ext: 'png',
+          },
+          {
+            name: '345.png',
+            ext: 'png',
+          },
+          {
+            name: '789.png',
+            ext: 'png',
+          },
+        ],
+      },
+    };
+    const res: any = {};
+    const next = jest.fn();
+
+    validate([
+      body(
+        object({
+          email: message('invalid email').isString().isEmail(),
+          fileList: array({
+            name: message('invalid file name').isString(),
+            ext: message('invalid file ext').isString(),
+          }),
+        })
+      ),
+    ])(req, res, next);
+
+    expect(next).toHaveBeenCalledWith();
+  });
 });
 
 describe('body test ( Fail )', () => {
@@ -124,6 +162,48 @@ describe('body test ( Fail )', () => {
     expect(next).toHaveBeenCalledWith(
       expect.objectContaining({
         messages: expect.any(Array),
+        status: 400,
+      })
+    );
+  });
+
+  test('4 - body test ( Fail )', () => {
+    const req: any = {
+      body: {
+        email: 'abc123@xx.xx',
+        fileList: [
+          {
+            name: null,
+            ext: 'png',
+          },
+          {
+            name: '345.png',
+            ext: 'png',
+          },
+          {
+            name: '789.png',
+            ext: 'png',
+          },
+        ],
+      },
+    };
+    const res: any = {};
+    const next = jest.fn();
+
+    validate([
+      body(
+        object({
+          email: message('invalid email').isString().isEmail(),
+          fileList: array({
+            name: message('invalid file name').isString(),
+            ext: message('invalid file ext').isString(),
+          }),
+        })
+      ),
+    ])(req, res, next);
+
+    expect(next).toHaveBeenCalledWith(
+      expect.objectContaining({
         status: 400,
       })
     );
@@ -303,5 +383,49 @@ describe('body message test', () => {
     expect(errorArg.messages[0].field).toBe(
       'body.email.depth1.numberList[0].numberList'
     );
+  });
+});
+
+describe('body trasnform test', () => {
+  test('1 - body trasnform test', () => {
+    const req: any = {
+      body: {
+        number: '123',
+      },
+    };
+    const res: any = {};
+    const next = jest.fn();
+
+    validate([
+      body({
+        number: message().isString().toInt(),
+      }),
+    ])(req, res, next);
+
+    expect(next).toHaveBeenCalledWith();
+    expect(req.body).toStrictEqual({
+      number: 123,
+    });
+  });
+
+  test('2 - body transform test', () => {
+    const req: any = {
+      body: {
+        number: '123',
+      },
+    };
+    const res: any = {};
+    const next = jest.fn();
+
+    validate([
+      body({
+        number: message().isString().split(''),
+      }),
+    ])(req, res, next);
+
+    expect(next).toHaveBeenCalledWith();
+    expect(req.body).toStrictEqual({
+      number: expect.any(Array),
+    });
   });
 });
