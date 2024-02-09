@@ -1,0 +1,13 @@
+node_modules/
+
+lib/
+
+tsconfig.json
+
+.prettierrc
+
+.prettierignore
+
+test/
+
+babel.config.js
