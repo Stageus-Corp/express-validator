@@ -473,4 +473,23 @@ describe('body trasnform test', () => {
       page: 1,
     });
   });
+
+  test('4 - body default trasnform test', () => {
+    const req: any = {
+      body: {},
+    };
+    const res: any = {};
+    const next = jest.fn();
+
+    validate([
+      body({
+        page: message().default(1).isNumber(),
+      }),
+    ])(req, res, next);
+
+    expect(next).toHaveBeenCalledWith();
+    expect(req.body).toStrictEqual({
+      page: 1,
+    });
+  });
 });
