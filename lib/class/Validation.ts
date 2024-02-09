@@ -1,7 +1,10 @@
-import { message, object } from '@stageus/validator';
-import { ArraySchema } from '@stageus/validator/dist/class/schema/ArraySchema';
-import { ObjectSchema } from '@stageus/validator/dist/class/schema/ObjectSchema';
-import { Validator } from '@stageus/validator/dist/class/validate/Validator';
+import {
+  ArraySchema,
+  ObjectSchema,
+  Validator,
+  message,
+  object,
+} from '@stageus/validator';
 import { ExpressValidation } from '../../types/Validation';
 
 export class Validation {
@@ -30,9 +33,6 @@ export class Validation {
   }
 
   public run(value: any): ExpressValidation.RunResult {
-    const messages: { field: string; message: string }[] = [];
-    let valid = true;
-
     const bodyObjectSchema = object(this.schema);
 
     const result = bodyObjectSchema.run(value, this.getFieldName());
@@ -42,44 +42,5 @@ export class Validation {
       messages: result.reason || [],
       value: result.value,
     };
-
-    // Valdiator
-    // if (this.schema instanceof Validator) {
-    //   const result = this.schema.run(value);
-
-    //   if (!result.valid) {
-    //     valid = false;
-    //     messages.push({
-    //       field: null,
-    //       message: result.message,
-    //     });
-    //   } else {
-    //     value = result.value;
-    //   }
-    // }
-
-    // // ArraySchema
-    // if (this.schema instanceof ArraySchema) {
-    //   const result = object(this.schema).run(value);
-
-    //   if (!result.valid) {
-    //     valid = false;
-    //     messages.push(...(result.reason || []));
-    //   } else {
-    //     value = result.value;
-    //   }
-    // }
-
-    // // ObjectSchema
-    // if (this.schema instanceof ObjectSchema) {
-    //   const result = this.schema.run(value);
-
-    //   if (!result.valid) {
-    //     valid = false;
-    //     messages.push(...(result.reason || []));
-    //   } else {
-    //     value = result.value;
-    //   }
-    // }
   }
 }
