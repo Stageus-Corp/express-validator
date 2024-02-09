@@ -1,6 +1,6 @@
 {
   "name": "@stageus/express-validator",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "validator for express",
   "main": "./dist/index.js",
   "scripts": {
