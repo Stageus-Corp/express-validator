@@ -125,6 +125,23 @@ describe('body test ( Success )', () => {
       },
     });
   });
+
+  test('7 - query test', () => {
+    const req: any = {
+      query: {
+        page: '1',
+      },
+    };
+    const res: any = {};
+    const next = jest.fn();
+
+    validate([query('page', message().isNumber().isInt())])(req, res, next);
+
+    expect(next).toHaveBeenCalledWith();
+    expect(req.query).toStrictEqual({
+      page: 1,
+    });
+  });
 });
 
 describe('body test ( Fail )', () => {
